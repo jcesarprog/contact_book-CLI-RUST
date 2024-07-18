@@ -5,9 +5,21 @@
     "phone": "555-555-555",
     "contacts": [
       {
-        "name": "t1",
-        "email": "t2",
-        "phone": "t3",
+        "name": "c1",
+        "email": "c1@123.com",
+        "phone": "555",
+        "contacts": null
+      },
+      {
+        "name": "c2",
+        "email": "c1@123.com",
+        "phone": "555",
+        "contacts": null
+      },
+      {
+        "name": "c3",
+        "email": "c1@123.com",
+        "phone": null,
         "contacts": null
       }
     ]

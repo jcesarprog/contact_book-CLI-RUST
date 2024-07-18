@@ -2,10 +2,10 @@ use serde::{Deserialize, Serialize};
 use std::io;
 #[derive(Debug, Serialize, Deserialize)]
 pub struct User {
-    name: String,
-    email: String,
-    phone: Option<String>,
-    contacts: Option<Vec<User>>,
+    pub name: String,
+    pub email: String,
+    pub phone: Option<String>,
+    pub contacts: Option<Vec<User>>,
 }
 impl User {
     pub fn new() -> Self {

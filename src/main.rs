@@ -29,7 +29,21 @@ fn main() {
                 println!("Selected list contacts from a user");
                 // ! for now it will show the content of the file
                 let users = cb_io::read_data("data.json");
-                println!("{users:#?}");
+                for user in users.iter() {
+                    match &user.contacts {
+                        Some(contacts) => {
+                            for contact in contacts.iter() {
+                                println!(
+                                    "{:#?}\t-\t{:#?}\t-\t{:#?}",
+                                    contact.name,
+                                    contact.email,
+                                    contact.phone.clone().unwrap_or("No Phone".to_string())
+                                );
+                            }
+                        }
+                        None => println!("No contacts for this user"),
+                    }
+                }
             }
             3 => {
                 println!("Selected to quit the app");
