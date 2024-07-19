@@ -21,3 +21,7 @@
 [ ] When listing users and contacts, make it able to select in a menu which user you want to select and see the respective contact list
 
 [ ] Check how to enable to keep a selected user highlited in the same poisition in the terminal, and then all future commands will work with this user already select, like creating a state for the selected user
+
+## Initial Design (It will be translated and modified)
+
+![Design01](./contact_book_flowchart.png)
