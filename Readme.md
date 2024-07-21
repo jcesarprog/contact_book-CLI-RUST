@@ -10,7 +10,7 @@
 
 ## Improvements identified to be done in the short term on the current code
 
-- [ ] Add a Contact similar to a User, but without the contact field (check if there any short syntax for that)
+- [x] Add a Contact similar to a User, but without the contact field (check if there any short syntax for that)
 
 - [ ] Change the structure from Vec<User> to a HashMap<User, Vec\<Contact\>>
 

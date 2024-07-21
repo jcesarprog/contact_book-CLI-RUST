@@ -1,10 +1,11 @@
 use dialoguer::{theme::ColorfulTheme, Select};
 pub fn create_menu() -> usize {
     let menu_items = [
-        "1: Register a user",
-        "2: Register a contact into a user",
-        "3: List contacts from a user",
-        "4: Quit",
+        "Register a user",
+        "Select a user",
+        "Register a contact into a user",
+        "List contacts from a user",
+        "Quit",
     ];
     println!("\nWelcome to contact book CLI app!");
 

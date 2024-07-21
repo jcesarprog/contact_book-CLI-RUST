@@ -17,6 +17,9 @@ fn main() {
                 cb_io::save_data(&users, "data.json")
             }
             1 => {
+                println!("Selected to select a user");
+            }
+            2 => {
                 println!("Selected to register a contact");
                 // ! for now it will save directly on the only user saved
                 let mut users = cb_io::read_data("data.json");
@@ -25,7 +28,7 @@ fn main() {
                 println!("Saving data...");
                 cb_io::save_data(&users, "data.json")
             }
-            2 => {
+            3 => {
                 println!("Selected list contacts from a user");
                 // ! for now it will show the content of the file
                 let users = cb_io::read_data("data.json");
@@ -45,7 +48,7 @@ fn main() {
                     }
                 }
             }
-            3 => {
+            4 => {
                 println!("Selected to quit the app");
                 std::process::exit(0);
             }
