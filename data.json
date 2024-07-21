@@ -7,20 +7,22 @@
       {
         "name": "c1",
         "email": "c1@123.com",
-        "phone": "555",
-        "contacts": null
+        "phone": "555"
       },
       {
         "name": "c2",
         "email": "c1@123.com",
-        "phone": "555",
-        "contacts": null
+        "phone": "555"
       },
       {
         "name": "c3",
         "email": "c1@123.com",
-        "phone": null,
-        "contacts": null
+        "phone": null
+      },
+      {
+        "name": "abc",
+        "email": "123",
+        "phone": "22-222"
       }
     ]
   }

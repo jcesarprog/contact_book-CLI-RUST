@@ -6,7 +6,7 @@ use std::{
 
 pub fn save_data(data: &Vec<User>, file_name: &str) {
     let ser = serde_json::to_string_pretty(data).expect("Error serializing data");
-    // println!("{}", ser)
+    println!("Data being saved: {:#?}", data);
 
     // ! creating the JSON file with the json data
     let mut file = OpenOptions::new()
