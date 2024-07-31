@@ -1,60 +1,22 @@
-pub mod cb_io;
-pub mod cb_menu;
-pub mod cb_user;
+mod app;
+mod io;
+mod menu;
+mod user;
 
-use cb_menu::create_menu;
-use cb_user::User;
+use app::AppState;
 
 fn main() {
-    loop {
-        let selection = create_menu();
-        match selection {
-            0 => {
-                println!("Selected to register a user");
-                let u = User::new();
-                let users = vec![u];
-                println!("Saving data...");
-                cb_io::save_data(&users, "data.json")
-            }
-            1 => {
-                println!("Selected to select a user");
-            }
-            2 => {
-                println!("Selected to register a contact");
-                // ! for now it will save directly on the only user saved
-                let mut users = cb_io::read_data("data.json");
-                let u = &mut users[0];
-                u.add_contact();
-                println!("Saving data...");
-                cb_io::save_data(&users, "data.json")
-            }
-            3 => {
-                println!("Selected list contacts from a user");
-                // ! for now it will show the content of the file
-                let users = cb_io::read_data("data.json");
-                for user in users.iter() {
-                    match &user.contacts {
-                        Some(contacts) => {
-                            for contact in contacts.iter() {
-                                println!(
-                                    "{:#?}\t-\t{:#?}\t-\t{:#?}",
-                                    contact.name,
-                                    contact.email,
-                                    contact.phone.clone().unwrap_or("No Phone".to_string())
-                                );
-                            }
-                        }
-                        None => println!("No contacts for this user"),
-                    }
-                }
-            }
-            4 => {
-                println!("Selected to quit the app");
-                std::process::exit(0);
-            }
-            _ => {
-                unreachable!();
-            }
-        }
+    let mut app = AppState::new();
+
+    let mut users = io::load_data();
+    println!("Users: {:#?}", &users);
+    app.get_user();
+    // app.set_user(&mut users[0]);
+    app.get_user();
+
+    match menu::create_main_menu(&app) {
+        0 => println!("Selected 0"),
+        1 => println!("Selected 1"),
+        val => println!("Selected something else: {val}"),
     }
 }
