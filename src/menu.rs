@@ -85,14 +85,6 @@ pub fn user_selection_menu<'a>(users: &'a mut Vec<User>, app: &'a mut AppState<'
             MenuState::UserMenu
         }
     }
-    // if selected_idx == users.len() {
-    //     // Back chosen
-    //     println!("Back chosen");
-    //     return MenuState::MainMenu;
-    // }
-
-    // app.set_user(&mut users[selected_idx]);
-    // MenuState::UserMenu
 }
 
 fn extract_names_from_users(users: &Vec<User>, put_back: bool) -> Vec<&str> {
@@ -114,8 +106,7 @@ pub fn user_menu(app: &AppState) -> MenuState {
         "Choose an option related to the current selected user",
         &items,
     );
-    // (generic_menu, items.len() - 1);
-    // ()
+
     match generic_menu {
         0 => MenuState::ListContacts,
         1 => MenuState::EditUserAndContacts,
