@@ -1,4 +1,4 @@
-use dialoguer::{theme::ColorfulTheme, Input};
+use dialoguer::{theme::ColorfulTheme, Confirm, Input};
 
 use crate::utils;
 
@@ -17,7 +17,7 @@ impl Contact {
                 set_input("Contact name:")
             },
             email: set_email(),
-            phone: None,
+            phone: set_phone(),
         }
     }
 }
@@ -47,4 +47,19 @@ fn set_email() -> String {
         .interact_text()
         .unwrap();
     mail
+}
+
+fn set_phone() -> Option<String> {
+    if Confirm::with_theme(&ColorfulTheme::default())
+        .with_prompt("Do you want to add a phone?")
+        .interact()
+        .unwrap()
+    {
+        println!("Adding a phone..");
+        let phone = set_input("Phone:");
+        Some(phone)
+    } else {
+        // println!("Not adding a phone");
+        None
+    }
 }
