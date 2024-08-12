@@ -5,9 +5,10 @@ mod menu;
 mod user;
 mod utils;
 
-use std::process::exit;
+use std::{collections::HashMap, process::exit};
 
 use app::AppState;
+use contact::Contact;
 use menu::MenuOption;
 use user::User;
 
@@ -50,6 +51,20 @@ fn main() {
                 // 5. insert the new user to the map
                 users.insert(u.email.clone(), u);
 
+                MenuOption::UserMainMenu
+            }
+            MenuOption::AddContact => {
+                let selected_user = utils::get_selected_user_mut(&app, &mut users);
+                let new_contact = Contact::new();
+                match &mut selected_user.contact {
+                    None => {
+                        selected_user.contact =
+                            Some(HashMap::from([(new_contact.email.clone(), new_contact)]));
+                    }
+                    Some(contacts) => {
+                        contacts.insert(new_contact.email.clone(), new_contact);
+                    }
+                }
                 MenuOption::UserMainMenu
             }
             MenuOption::Quit => {

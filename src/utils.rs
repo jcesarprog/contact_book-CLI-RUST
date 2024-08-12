@@ -50,3 +50,17 @@ pub fn clear_terminal_and_show_user(app: &AppState, users: &HashMap<String, User
     clear_terminal();
     show_user(app, users)
 }
+
+pub fn get_selected_user<'a>(app: &AppState, users: &'a HashMap<String, User>) -> &'a User {
+    let user_key = app.user_selected.as_ref().unwrap();
+    let selected_user = users.get(user_key).unwrap();
+    selected_user
+}
+pub fn get_selected_user_mut<'a>(
+    app: &AppState,
+    users: &'a mut HashMap<String, User>,
+) -> &'a mut User {
+    let user_key = app.user_selected.as_ref().unwrap();
+    let selected_user = users.get_mut(user_key).unwrap();
+    selected_user
+}

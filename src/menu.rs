@@ -54,8 +54,16 @@ pub fn menu_list_users_to_select(app: &mut AppState, users: &HashMap<String, Use
 
 pub fn menu_user_menu(app: &AppState, users: &HashMap<String, User>) -> MenuOption {
     utils::clear_terminal_and_show_user(app, users);
+    // ## Getting contacts size
+    let selected_user = utils::get_selected_user(app, users);
+    let contacts_size = match &selected_user.contact {
+        Some(contacts) => contacts.len(),
+        None => 0,
+    };
+    let list_contact_opt = format!("List contacts({})", contacts_size);
+    // ##
 
-    let selections = &["Edit user", "List contacts", "Add Contact", "<- Back"];
+    let selections = &["Edit user", &list_contact_opt, "Add Contact", "<- Back"];
 
     let selection = Select::with_theme(&ColorfulTheme::default())
         .with_prompt("Choose an option")
