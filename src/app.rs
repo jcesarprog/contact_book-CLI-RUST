@@ -1,30 +1,17 @@
-use crate::user::User;
-
-pub struct AppState<'a> {
-    pub user_selected: Option<&'a mut User>,
+use super::menu::MenuOption;
+#[derive(Debug)]
+pub struct AppState {
+    pub menu_state: MenuOption,
+    pub user_selected: Option<usize>,
+    pub contact_selected: Option<usize>,
 }
 
-impl<'a> AppState<'a> {
+impl AppState {
     pub fn new() -> Self {
         Self {
+            menu_state: MenuOption::MainMenu,
             user_selected: None,
+            contact_selected: None,
         }
-    }
-
-    pub fn get_user(&self) -> String {
-        let res = match &self.user_selected {
-            None => "No user selected".to_string(),
-            Some(user) => format!("{}", user.name),
-        };
-        // println!("{}", res);
-        res
-    }
-
-    pub fn set_user(&mut self, user: &'a mut User) {
-        self.user_selected = Some(user);
-    }
-
-    pub fn clear_state(&mut self) {
-        self.user_selected = None;
     }
 }

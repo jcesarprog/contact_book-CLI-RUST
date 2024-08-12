@@ -1,30 +1,33 @@
 mod app;
+mod contact;
 mod io;
 mod menu;
 mod user;
+mod utils;
 
 use app::AppState;
-use menu::MenuState;
+use dialoguer::{theme::ColorfulTheme, Input};
+use menu::MenuOption;
+use user::User;
+use utils::show_user;
 
 fn main() {
     let mut app = AppState::new();
-    let mut users = io::load_data();
+    let mut users = io::load_users().expect("Error loading users");
 
-    let mut menu_state = MenuState::MainMenu;
     loop {
-        menu_state = match menu_state {
-            MenuState::MainMenu => menu::main_menu(&app),
-            MenuState::UserMenu => menu::user_menu(&app),
-            MenuState::UserSelectionMenu => {
-                // ! Need to Limit the scope of the mutable borrow of `users` and `app`
-                let next_state = menu::user_selection_menu(&mut users, &mut app);
-                next_state
+        app.menu_state = match app.menu_state {
+            MenuOption::MainMenu => {
+                show_user(&app, &users);
+                menu::menu_select_register_user()
             }
-            MenuState::Quit => {
-                println!("Good Bye!");
-                std::process::exit(0);
+            MenuOption::RegisterUser => {
+                let u = User::new();
+                users.push(u);
+                println!("{:#?}", users);
+                MenuOption::UserMainMenu
             }
-            _ => unreachable!(),
+            _ => MenuOption::Quit,
         };
     }
 }
