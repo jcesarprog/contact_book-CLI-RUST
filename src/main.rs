@@ -10,7 +10,6 @@ use std::process::exit;
 use app::AppState;
 use menu::MenuOption;
 use user::User;
-use utils::show_user;
 
 fn main() {
     let mut app = AppState::new();
@@ -19,7 +18,7 @@ fn main() {
     loop {
         app.menu_state = match app.menu_state {
             MenuOption::MainMenu => {
-                show_user(&app);
+                utils::clear_terminal_and_show_user(&app);
                 menu::menu_select_register_user()
             }
             MenuOption::RegisterUser => {
@@ -28,7 +27,9 @@ fn main() {
                 println!("{:#?}", users);
                 MenuOption::UserMainMenu
             }
-            MenuOption::ListUsersToSelect => menu::menu_list_users_to_select(&users),
+            MenuOption::ListUsersToSelect => menu::menu_list_users_to_select(&mut app, &users),
+
+            MenuOption::UserMainMenu => not_implelemted_yet("User Main Menu"),
             MenuOption::Quit => {
                 println!("Good bye!",);
                 exit(0)
@@ -36,4 +37,9 @@ fn main() {
             _ => unreachable!(),
         };
     }
+}
+
+fn not_implelemted_yet(section: &str) -> MenuOption {
+    println!("{} - Not implemented yet", section);
+    MenuOption::Quit
 }

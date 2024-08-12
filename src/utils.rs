@@ -1,3 +1,5 @@
+use std::process::Command;
+
 use dialoguer::console::{style, Color};
 
 use crate::app::AppState;
@@ -12,11 +14,29 @@ pub fn print_with_theme(message: &str) {
 
 pub fn show_user(app: &AppState) {
     let user_selected = match &app.user_selected {
-        Some(user_email) => &user_email,
+        Some(user_email) => user_email,
         None => &"None".to_string(),
     };
-
-    println!("###########################################");
+    clear_terminal();
+    println!("\n###########################################");
     println!("### Selected: {}", user_selected);
-    println!("###########################################");
+    println!("###########################################\n");
+}
+
+pub fn clear_terminal() {
+    // Clear the terminal
+    if cfg!(target_os = "windows") {
+        Command::new("cls")
+            .status()
+            .expect("failed to execute process");
+    } else {
+        Command::new("clear")
+            .status()
+            .expect("failed to execute process");
+    }
+}
+
+pub fn clear_terminal_and_show_user(app: &AppState) {
+    clear_terminal();
+    show_user(app)
 }

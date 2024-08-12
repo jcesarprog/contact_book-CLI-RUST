@@ -2,7 +2,7 @@ use std::collections::HashMap;
 
 use dialoguer::{theme::ColorfulTheme, Select};
 
-use crate::user::User;
+use crate::{app::AppState, user::User, utils};
 
 #[derive(Debug)]
 pub enum MenuOption {
@@ -30,8 +30,8 @@ pub fn menu_select_register_user() -> MenuOption {
     }
 }
 
-pub fn menu_list_users_to_select(users: &HashMap<String, User>) -> MenuOption {
-    println!("{}", "Select a user:");
+pub fn menu_list_users_to_select(app: &mut AppState, users: &HashMap<String, User>) -> MenuOption {
+    utils::clear_terminal_and_show_user(app);
     let mut user_names: Vec<&String> = users.keys().collect();
     let back = "<- Back".to_string();
     user_names.push(&back);
@@ -44,5 +44,7 @@ pub fn menu_list_users_to_select(users: &HashMap<String, User>) -> MenuOption {
     if selection == user_names.len() - 1 {
         return MenuOption::MainMenu;
     }
-    MenuOption::Quit
+
+    app.user_selected = Some(user_names[selection].clone());
+    MenuOption::UserMainMenu
 }
