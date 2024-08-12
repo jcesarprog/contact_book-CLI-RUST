@@ -11,6 +11,9 @@ pub enum MenuOption {
     UserMainMenu,      // Menu with the options for a selected user
     Quit,
     RegisterUser,
+    EditUser,
+    ListContacts,
+    AddContact,
 }
 
 pub fn menu_select_register_user() -> MenuOption {
@@ -47,4 +50,24 @@ pub fn menu_list_users_to_select(app: &mut AppState, users: &HashMap<String, Use
 
     app.user_selected = Some(user_names[selection].clone());
     MenuOption::UserMainMenu
+}
+
+pub fn menu_user_menu(app: &AppState) -> MenuOption {
+    utils::clear_terminal_and_show_user(app);
+
+    let selections = &["Edit user", "List contacts", "Add Contact", "<- Back"];
+
+    let selection = Select::with_theme(&ColorfulTheme::default())
+        .with_prompt("Choose an option")
+        .default(0)
+        .items(&selections[..])
+        .interact()
+        .unwrap();
+
+    match selection {
+        0 => MenuOption::EditUser,
+        1 => MenuOption::ListContacts,
+        2 => MenuOption::AddContact,
+        _ => MenuOption::ListUsersToSelect,
+    }
 }

@@ -3,7 +3,7 @@ use super::menu::MenuOption;
 pub struct AppState {
     pub menu_state: MenuOption,
     pub user_selected: Option<String>,
-    pub contact_selected: Option<usize>,
+    pub contact_selected: Option<String>,
 }
 
 impl AppState {

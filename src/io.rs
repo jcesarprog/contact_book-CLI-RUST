@@ -16,18 +16,24 @@ pub fn load_users() -> Result<HashMap<String, User>, Error> {
     let u3 = User {
         name: "user 3".to_string(),
         email: "user3@mail".to_string(),
-        contact: Some(vec![
-            Contact {
-                name: "contact1".to_string(),
-                email: "contact1@mail".to_string(),
-                phone: None,
-            },
-            Contact {
-                name: "contact2".to_string(),
-                email: "contact2@mail".to_string(),
-                phone: Some("123-123-123".to_string()),
-            },
-        ]),
+        contact: Some(HashMap::from([
+            (
+                String::from("contact1@mail"),
+                Contact {
+                    name: "contact1".to_string(),
+                    email: "contact1@mail".to_string(),
+                    phone: None,
+                },
+            ),
+            (
+                String::from("contact2@mail"),
+                Contact {
+                    name: "contact2".to_string(),
+                    email: "contact2@mail".to_string(),
+                    phone: Some("123-123-123".to_string()),
+                },
+            ),
+        ])),
     };
     let mut users = HashMap::new();
     users.insert(u1.email.clone(), u1);

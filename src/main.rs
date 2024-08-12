@@ -22,19 +22,22 @@ fn main() {
                 menu::menu_select_register_user()
             }
             MenuOption::RegisterUser => {
+                // create the user
                 let u = User::new();
+                // set the user to be selected on state
+                app.user_selected = Some(u.email.clone());
+                // insert the user on the users vector
                 users.insert(u.email.clone(), u);
-                println!("{:#?}", users);
                 MenuOption::UserMainMenu
             }
             MenuOption::ListUsersToSelect => menu::menu_list_users_to_select(&mut app, &users),
 
-            MenuOption::UserMainMenu => not_implelemted_yet("User Main Menu"),
+            MenuOption::UserMainMenu => menu::menu_user_menu(&app),
             MenuOption::Quit => {
                 println!("Good bye!",);
                 exit(0)
             }
-            _ => unreachable!(),
+            opt => not_implelemted_yet(format!("{:?}", opt).as_str()),
         };
     }
 }

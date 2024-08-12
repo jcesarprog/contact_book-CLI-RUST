@@ -1,3 +1,5 @@
+use std::collections::HashMap;
+
 use dialoguer::{theme::ColorfulTheme, Input};
 
 use crate::utils;
@@ -8,7 +10,7 @@ use super::contact::Contact;
 pub struct User {
     pub name: String,
     pub email: String,
-    pub contact: Option<Vec<Contact>>,
+    pub contact: Option<HashMap<String, Contact>>,
 }
 
 impl User {
@@ -29,8 +31,6 @@ fn set_input(prompt: &str) -> String {
         .with_prompt(prompt)
         .interact_text()
         .unwrap();
-
-    println!("Hello {}!", input);
     input
 }
 
@@ -50,7 +50,5 @@ fn set_email() -> String {
         })
         .interact_text()
         .unwrap();
-
-    println!("Email: {}", mail);
     mail
 }
