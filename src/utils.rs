@@ -48,7 +48,8 @@ pub fn clear_terminal() {
 
 pub fn clear_terminal_and_show_user(app: &AppState, users: &HashMap<String, User>) {
     clear_terminal();
-    show_user(app, users)
+    show_user(app, users);
+    // println!("{:#?}", app);
 }
 
 pub fn get_selected_user<'a>(app: &AppState, users: &'a HashMap<String, User>) -> &'a User {

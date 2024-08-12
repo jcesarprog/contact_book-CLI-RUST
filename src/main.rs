@@ -67,6 +67,7 @@ fn main() {
                 }
                 MenuOption::UserMainMenu
             }
+            MenuOption::ListContacts => menu::menu_list_contacts_to_select(&mut app, &users),
             MenuOption::Quit => {
                 println!("Good bye!",);
                 exit(0)
