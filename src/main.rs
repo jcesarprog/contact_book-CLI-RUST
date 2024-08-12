@@ -33,6 +33,25 @@ fn main() {
             MenuOption::ListUsersToSelect => menu::menu_list_users_to_select(&mut app, &users),
 
             MenuOption::UserMainMenu => menu::menu_user_menu(&app, &users),
+            MenuOption::EditUser => {
+                // This option will clone the user contacts
+                // delete the original key and create a new one with the same old contacs
+                // 1. Creating a new user
+                let mut u: User = User::new();
+                // 2. Retrieving old data
+                let former_user_str = app.user_selected.clone().unwrap();
+                let former_user = users.remove(&former_user_str).unwrap();
+                // 3. add old contacts to new user
+                if let Some(former_contacts) = former_user.contact {
+                    u.contact = Some(former_contacts.clone());
+                }
+                // 4. update the state
+                app.user_selected = Some(u.email.clone());
+                // 5. insert the new user to the map
+                users.insert(u.email.clone(), u);
+
+                MenuOption::UserMainMenu
+            }
             MenuOption::Quit => {
                 println!("Good bye!",);
                 exit(0)

@@ -6,7 +6,7 @@ use crate::utils;
 
 use super::contact::Contact;
 
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 pub struct User {
     pub name: String,
     pub email: String,
