@@ -5,8 +5,9 @@ mod menu;
 mod user;
 mod utils;
 
+use std::process::exit;
+
 use app::AppState;
-use dialoguer::{theme::ColorfulTheme, Input};
 use menu::MenuOption;
 use user::User;
 use utils::show_user;
@@ -18,16 +19,21 @@ fn main() {
     loop {
         app.menu_state = match app.menu_state {
             MenuOption::MainMenu => {
-                show_user(&app, &users);
+                show_user(&app);
                 menu::menu_select_register_user()
             }
             MenuOption::RegisterUser => {
                 let u = User::new();
-                users.push(u);
+                users.insert(u.email.clone(), u);
                 println!("{:#?}", users);
                 MenuOption::UserMainMenu
             }
-            _ => MenuOption::Quit,
+            MenuOption::ListUsersToSelect => menu::menu_list_users_to_select(&users),
+            MenuOption::Quit => {
+                println!("Good bye!",);
+                exit(0)
+            }
+            _ => unreachable!(),
         };
     }
 }

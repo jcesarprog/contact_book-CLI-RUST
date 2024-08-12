@@ -2,7 +2,7 @@ use super::menu::MenuOption;
 #[derive(Debug)]
 pub struct AppState {
     pub menu_state: MenuOption,
-    pub user_selected: Option<usize>,
+    pub user_selected: Option<String>,
     pub contact_selected: Option<usize>,
 }
 

@@ -1,4 +1,8 @@
+use std::collections::HashMap;
+
 use dialoguer::{theme::ColorfulTheme, Select};
+
+use crate::user::User;
 
 #[derive(Debug)]
 pub enum MenuOption {
@@ -10,7 +14,7 @@ pub enum MenuOption {
 }
 
 pub fn menu_select_register_user() -> MenuOption {
-    let selections = &["Select a user", "Register a user"];
+    let selections = &["Select a user", "Register a user", "Quit"];
 
     let selection = Select::with_theme(&ColorfulTheme::default())
         .with_prompt("Choose an option")
@@ -22,6 +26,23 @@ pub fn menu_select_register_user() -> MenuOption {
     match selection {
         0 => MenuOption::ListUsersToSelect,
         1 => MenuOption::RegisterUser,
-        _ => unreachable!(),
+        _ => MenuOption::Quit,
     }
+}
+
+pub fn menu_list_users_to_select(users: &HashMap<String, User>) -> MenuOption {
+    println!("{}", "Select a user:");
+    let mut user_names: Vec<&String> = users.keys().collect();
+    let back = "<- Back".to_string();
+    user_names.push(&back);
+    let selection = Select::with_theme(&ColorfulTheme::default())
+        .with_prompt("Choose an user")
+        .default(0)
+        .items(&user_names[..])
+        .interact()
+        .unwrap();
+    if selection == user_names.len() - 1 {
+        return MenuOption::MainMenu;
+    }
+    MenuOption::Quit
 }

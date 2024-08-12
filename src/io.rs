@@ -1,8 +1,8 @@
-use std::io::Error;
+use std::{collections::HashMap, io::Error};
 
 use crate::{contact::Contact, user::User};
 
-pub fn load_users() -> Result<Vec<User>, Error> {
+pub fn load_users() -> Result<HashMap<String, User>, Error> {
     let u1 = User {
         name: "user 1".to_string(),
         email: "user1@mail".to_string(),
@@ -29,5 +29,9 @@ pub fn load_users() -> Result<Vec<User>, Error> {
             },
         ]),
     };
-    Ok(vec![u1, u2, u3])
+    let mut users = HashMap::new();
+    users.insert(u1.email.clone(), u1);
+    users.insert(u2.email.clone(), u2);
+    users.insert(u3.email.clone(), u3);
+    Ok(users)
 }
