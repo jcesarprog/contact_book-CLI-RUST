@@ -1,8 +1,6 @@
-use std::collections::HashMap;
-
 use dialoguer::console::{style, Color};
 
-use crate::{app::AppState, user::User};
+use crate::app::AppState;
 
 pub fn print_with_theme(message: &str) {
     // Use the theme's style to print the message
@@ -15,10 +13,10 @@ pub fn print_with_theme(message: &str) {
 pub fn show_user(app: &AppState) {
     let user_selected = match &app.user_selected {
         Some(user_email) => &user_email,
-        None => &"".to_string(),
+        None => &"None".to_string(),
     };
 
-    println!("####################",);
-    println!("### Selected: {} ### ", user_selected);
-    println!("####################",);
+    println!("###########################################");
+    println!("### Selected: {}", user_selected);
+    println!("###########################################");
 }
