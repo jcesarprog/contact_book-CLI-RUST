@@ -18,7 +18,7 @@ fn main() {
     loop {
         app.menu_state = match app.menu_state {
             MenuOption::MainMenu => {
-                utils::clear_terminal_and_show_user(&app);
+                utils::clear_terminal_and_show_user(&app, &users);
                 menu::menu_select_register_user()
             }
             MenuOption::RegisterUser => {
@@ -32,7 +32,7 @@ fn main() {
             }
             MenuOption::ListUsersToSelect => menu::menu_list_users_to_select(&mut app, &users),
 
-            MenuOption::UserMainMenu => menu::menu_user_menu(&app),
+            MenuOption::UserMainMenu => menu::menu_user_menu(&app, &users),
             MenuOption::Quit => {
                 println!("Good bye!",);
                 exit(0)

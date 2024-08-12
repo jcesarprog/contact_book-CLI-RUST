@@ -1,9 +1,9 @@
-use std::process::Command;
+use std::{collections::HashMap, process::Command};
 
 use colored::Colorize;
 use dialoguer::console::{style, Color};
 
-use crate::app::AppState;
+use crate::{app::AppState, user::User};
 
 pub fn print_with_theme(message: &str) {
     // Use the theme's style to print the message
@@ -13,14 +13,23 @@ pub fn print_with_theme(message: &str) {
     println!("{}", styled_message);
 }
 
-pub fn show_user(app: &AppState) {
+pub fn show_user(app: &AppState, users: &HashMap<String, User>) {
     let user_selected = match &app.user_selected {
-        Some(user_email) => user_email,
-        None => &"No user selected".to_string(),
+        Some(user_email) => (user_email.as_str(), users[user_email].name.as_str()),
+        None => ("No user selected", ""),
     };
     clear_terminal();
     println!("\n###########################################");
-    println!("### Selected: {}", user_selected.bright_cyan());
+    if !user_selected.1.is_empty() {
+        println!(
+            "### Selected: {} ({})",
+            user_selected.0.bright_cyan(),
+            user_selected.1.bright_green()
+        );
+    } else {
+        println!("### Selected: {}", user_selected.0.bright_cyan(),);
+    }
+
     println!("###########################################\n");
 }
 
@@ -37,7 +46,7 @@ pub fn clear_terminal() {
     }
 }
 
-pub fn clear_terminal_and_show_user(app: &AppState) {
+pub fn clear_terminal_and_show_user(app: &AppState, users: &HashMap<String, User>) {
     clear_terminal();
-    show_user(app)
+    show_user(app, users)
 }

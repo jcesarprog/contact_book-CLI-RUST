@@ -34,7 +34,7 @@ pub fn menu_select_register_user() -> MenuOption {
 }
 
 pub fn menu_list_users_to_select(app: &mut AppState, users: &HashMap<String, User>) -> MenuOption {
-    utils::clear_terminal_and_show_user(app);
+    utils::clear_terminal_and_show_user(app, users);
     let mut user_names: Vec<&String> = users.keys().collect();
     let back = "<- Back".to_string();
     user_names.push(&back);
@@ -52,8 +52,8 @@ pub fn menu_list_users_to_select(app: &mut AppState, users: &HashMap<String, Use
     MenuOption::UserMainMenu
 }
 
-pub fn menu_user_menu(app: &AppState) -> MenuOption {
-    utils::clear_terminal_and_show_user(app);
+pub fn menu_user_menu(app: &AppState, users: &HashMap<String, User>) -> MenuOption {
+    utils::clear_terminal_and_show_user(app, users);
 
     let selections = &["Edit user", "List contacts", "Add Contact", "<- Back"];
 
