@@ -1,5 +1,6 @@
 use std::process::Command;
 
+use colored::Colorize;
 use dialoguer::console::{style, Color};
 
 use crate::app::AppState;
@@ -15,11 +16,11 @@ pub fn print_with_theme(message: &str) {
 pub fn show_user(app: &AppState) {
     let user_selected = match &app.user_selected {
         Some(user_email) => user_email,
-        None => &"None".to_string(),
+        None => &"No user selected".to_string(),
     };
     clear_terminal();
     println!("\n###########################################");
-    println!("### Selected: {}", user_selected);
+    println!("### Selected: {}", user_selected.bright_cyan());
     println!("###########################################\n");
 }
 
