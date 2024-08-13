@@ -173,7 +173,7 @@ pub fn menu_add_contact(app: &mut AppState, users: &mut HashMap<String, User>) -
             contacts.insert(new_contact.email.clone(), new_contact);
         }
     }
-    MenuOption::UserMainMenu
+    MenuOption::ListContacts
 }
 
 pub fn menu_edit_contact(app: &mut AppState, users: &mut HashMap<String, User>) -> MenuOption {
