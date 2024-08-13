@@ -2,7 +2,7 @@ use std::collections::HashMap;
 
 use dialoguer::{theme::ColorfulTheme, Select};
 
-use crate::{app::AppState, user::User, utils};
+use crate::{app::AppState, contact::Contact, user::User, utils};
 
 #[derive(Debug)]
 pub enum MenuOption {
@@ -12,8 +12,9 @@ pub enum MenuOption {
     Quit,
     RegisterUser,
     EditUser,
-    ListContacts,
+    ListContacts, // Menu with the list of contacts
     AddContact,
+    EditContact,
 }
 
 pub fn menu_select_register_user() -> MenuOption {
@@ -113,5 +114,69 @@ pub fn menu_list_contacts_to_select(
     }
     let contact_selected = contact_names[selection].split_whitespace().next().unwrap();
     app.contact_selected = Some(contact_selected.to_string());
+    MenuOption::EditContact
+}
+
+pub fn menu_register_user(app: &mut AppState, users: &mut HashMap<String, User>) -> MenuOption {
+    // create the user
+    let u = User::new();
+    // set the user to be selected on state
+    app.user_selected = Some(u.email.clone());
+    // insert the user on the users vector
+    users.insert(u.email.clone(), u);
     MenuOption::UserMainMenu
+}
+
+pub fn menu_edit_user(app: &mut AppState, users: &mut HashMap<String, User>) -> MenuOption {
+    // This option will clone the user contacts
+    // delete the original key and create a new one with the same old contacs
+    // 1. Creating a new user
+    let mut u: User = User::new();
+    // 2. Retrieving old data
+    let former_user_str = app.user_selected.clone().unwrap();
+    let former_user = users.remove(&former_user_str).unwrap();
+    // 3. add old contacts to new user
+    if let Some(former_contacts) = former_user.contact {
+        u.contact = Some(former_contacts.clone());
+    }
+    // 4. update the state
+    app.user_selected = Some(u.email.clone());
+    // 5. insert the new user to the map
+    users.insert(u.email.clone(), u);
+
+    MenuOption::UserMainMenu
+}
+
+pub fn menu_add_contact(app: &mut AppState, users: &mut HashMap<String, User>) -> MenuOption {
+    let selected_user = utils::get_selected_user_mut(app, users);
+    let new_contact = Contact::new();
+    match &mut selected_user.contact {
+        None => {
+            selected_user.contact = Some(HashMap::from([(new_contact.email.clone(), new_contact)]));
+        }
+        Some(contacts) => {
+            contacts.insert(new_contact.email.clone(), new_contact);
+        }
+    }
+    MenuOption::UserMainMenu
+}
+
+pub fn menu_edit_contact(app: &mut AppState, users: &mut HashMap<String, User>) -> MenuOption {
+    // 1. get the selected user
+    let selected_user = utils::get_selected_user_mut(app, users);
+    // 2. remove the selected contact
+    selected_user
+        .contact
+        .as_mut()
+        .unwrap()
+        .remove(app.contact_selected.as_ref().unwrap());
+    app.contact_selected = None;
+    // 3. create a new contact and replace the former
+    let new_contact = Contact::new();
+    selected_user
+        .contact
+        .as_mut()
+        .unwrap()
+        .insert(new_contact.name.clone(), new_contact);
+    MenuOption::ListContacts
 }
