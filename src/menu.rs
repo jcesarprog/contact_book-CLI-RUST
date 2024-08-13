@@ -87,34 +87,49 @@ pub fn menu_list_contacts_to_select(
 ) -> MenuOption {
     utils::clear_terminal_and_show_user(app, users);
     let current_user = utils::get_selected_user(app, users);
-    let contacts = current_user.contact.as_ref().unwrap();
-    let mut contact_names = contacts
-        .iter()
-        .map(|(email, val)| {
-            format!(
-                "{}\t({})\t{:?}",
-                email,
-                val.name,
-                val.phone
-                    .clone()
-                    .unwrap_or("No phone registered".to_string())
-            )
-        })
-        .collect::<Vec<_>>();
-    let back = "<- Back".to_string();
-    contact_names.push(back);
-    let selection = Select::with_theme(&ColorfulTheme::default())
-        .with_prompt("Choose a contact to edit")
-        .default(0)
-        .items(&contact_names[..])
-        .interact()
-        .unwrap();
-    if selection == contact_names.len() - 1 {
-        return MenuOption::UserMainMenu;
+    let contacts = current_user.contact.as_ref();
+    match contacts {
+        Some(contacts) => {
+            let mut contact_names = contacts
+                .iter()
+                .map(|(email, val)| {
+                    format!(
+                        "{}\t({})\t{:?}",
+                        email,
+                        val.name,
+                        val.phone
+                            .clone()
+                            .unwrap_or("No phone registered".to_string())
+                    )
+                })
+                .collect::<Vec<_>>();
+            let back = "<- Back".to_string();
+            contact_names.push(back);
+
+            let selection = Select::with_theme(&ColorfulTheme::default())
+                .with_prompt("Choose a contact to edit")
+                .default(0)
+                .items(&contact_names[..])
+                .interact()
+                .unwrap();
+            if selection == contact_names.len() - 1 {
+                return MenuOption::UserMainMenu;
+            }
+            let contact_selected = contact_names[selection].split_whitespace().next().unwrap();
+            app.contact_selected = Some(contact_selected.to_string());
+            MenuOption::EditContact
+        }
+        None => {
+            Select::with_theme(&ColorfulTheme::default())
+                .with_prompt("Choose a contact to edit")
+                .default(0)
+                .items(&["<- Back"])
+                .interact()
+                .unwrap();
+
+            MenuOption::UserMainMenu
+        }
     }
-    let contact_selected = contact_names[selection].split_whitespace().next().unwrap();
-    app.contact_selected = Some(contact_selected.to_string());
-    MenuOption::EditContact
 }
 
 pub fn menu_register_user(app: &mut AppState, users: &mut HashMap<String, User>) -> MenuOption {
