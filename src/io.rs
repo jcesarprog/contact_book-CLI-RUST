@@ -21,7 +21,7 @@ fn load_file(file_name: &str) -> File {
     }
 }
 
-pub fn load_users_from_json() -> Result<HashMap<String, User>, Error> {
+pub fn load_data_from_json() -> Result<HashMap<String, User>, Error> {
     let mut data = load_file("data.json");
     let mut json_data_string = String::new();
     data.read_to_string(&mut json_data_string)?;
@@ -33,4 +33,9 @@ pub fn load_users_from_json() -> Result<HashMap<String, User>, Error> {
     }
     users = serde_json::from_str(&json_data_string).unwrap();
     Ok(users)
+}
+
+pub fn save_data_to_json() -> Result<(), Error> {
+    // TODO
+    Ok(())
 }
