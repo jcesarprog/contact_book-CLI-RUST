@@ -1,43 +1,36 @@
-use std::{collections::HashMap, io::Error};
+use std::{
+    collections::HashMap,
+    fs::File,
+    io::{Error, Read},
+};
 
-use crate::{contact::Contact, user::User};
+use crate::user::User;
 
-pub fn load_users() -> Result<HashMap<String, User>, Error> {
-    let u1 = User {
-        name: "user 1".to_string(),
-        email: "user1@mail".to_string(),
-        contact: None,
-    };
-    let u2 = User {
-        name: "user 2".to_string(),
-        email: "user2@mail".to_string(),
-        contact: None,
-    };
-    let u3 = User {
-        name: "user 3".to_string(),
-        email: "user3@mail".to_string(),
-        contact: Some(HashMap::from([
-            (
-                String::from("contact1@mail"),
-                Contact {
-                    name: "contact1".to_string(),
-                    email: "contact1@mail".to_string(),
-                    phone: None,
-                },
-            ),
-            (
-                String::from("contact2@mail"),
-                Contact {
-                    name: "contact2".to_string(),
-                    email: "contact2@mail".to_string(),
-                    phone: Some("123-123-123".to_string()),
-                },
-            ),
-        ])),
-    };
-    let mut users = HashMap::new();
-    users.insert(u1.email.clone(), u1);
-    users.insert(u2.email.clone(), u2);
-    users.insert(u3.email.clone(), u3);
+fn load_file(file_name: &str) -> File {
+    let file = File::open(file_name);
+    match file {
+        Ok(f) => f,
+        Err(e) => {
+            eprintln!(
+                "There was a error when trying to open file {}\n{}",
+                file_name, e
+            );
+            println!("trying to create the file if the error was due to file not exisiting");
+            File::create_new(file_name).unwrap()
+        }
+    }
+}
+
+pub fn load_users_from_json() -> Result<HashMap<String, User>, Error> {
+    let mut data = load_file("data.json");
+    let mut json_data_string = String::new();
+    data.read_to_string(&mut json_data_string)?;
+
+    let users: HashMap<String, User>;
+    if json_data_string.is_empty() {
+        users = HashMap::new();
+        return Ok(users);
+    }
+    users = serde_json::from_str(&json_data_string).unwrap();
     Ok(users)
 }

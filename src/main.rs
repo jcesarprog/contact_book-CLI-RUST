@@ -10,7 +10,7 @@ use menu::MenuOption;
 
 fn main() {
     let mut app = AppState::new();
-    let mut users = io::load_users().expect("Error loading users");
+    let mut users = io::load_users_from_json().expect("Error loading users");
 
     loop {
         app.menu_state = match app.menu_state {
@@ -32,9 +32,4 @@ fn main() {
             }
         };
     }
-}
-
-fn not_implelemted_yet(section: &str) -> MenuOption {
-    println!("{:?} - Not implemented yet", section);
-    MenuOption::Quit
 }

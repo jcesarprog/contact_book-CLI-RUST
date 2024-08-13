@@ -1,8 +1,8 @@
-use dialoguer::{theme::ColorfulTheme, Confirm, Input};
-
 use crate::utils;
+use dialoguer::{theme::ColorfulTheme, Confirm, Input};
+use serde::{Deserialize, Serialize};
 
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct Contact {
     pub name: String,
     pub email: String,

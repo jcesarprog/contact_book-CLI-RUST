@@ -3,7 +3,7 @@ use std::{collections::HashMap, process::Command};
 use colored::Colorize;
 use dialoguer::console::{style, Color};
 
-use crate::{app::AppState, user::User};
+use crate::{app::AppState, menu::MenuOption, user::User};
 
 pub fn print_with_theme(message: &str) {
     // Use the theme's style to print the message
@@ -64,4 +64,9 @@ pub fn get_selected_user_mut<'a>(
     let user_key = app.user_selected.as_ref().unwrap();
     let selected_user = users.get_mut(user_key).unwrap();
     selected_user
+}
+
+pub fn not_implelemted_yet(section: &str) -> MenuOption {
+    println!("{:?} - Not implemented yet", section);
+    MenuOption::Quit
 }

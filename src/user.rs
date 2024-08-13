@@ -1,12 +1,12 @@
 use std::collections::HashMap;
 
-use dialoguer::{theme::ColorfulTheme, Input};
-
 use crate::utils;
+use dialoguer::{theme::ColorfulTheme, Input};
+use serde::{Deserialize, Serialize};
 
 use super::contact::Contact;
 
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct User {
     pub name: String,
     pub email: String,

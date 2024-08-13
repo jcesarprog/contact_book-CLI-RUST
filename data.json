@@ -1,29 +1,28 @@
-[
-  {
-    "name": "julio cesar",
-    "email": "123@123.com",
-    "phone": "555-555-555",
-    "contacts": [
-      {
-        "name": "c1",
-        "email": "c1@123.com",
-        "phone": "555"
-      },
-      {
-        "name": "c2",
-        "email": "c1@123.com",
-        "phone": "555"
-      },
-      {
-        "name": "c3",
-        "email": "c1@123.com",
-        "phone": null
-      },
-      {
-        "name": "abc",
-        "email": "123",
-        "phone": "22-222"
-      }
-    ]
-  }
-]
+{
+    "user3@mail": {
+        "name": "user 3",
+        "email": "user3@mail",
+        "contact": {
+            "contact1@mail": {
+                "name": "contact1",
+                "email": "contact1@mail",
+                "phone": null
+            },
+            "contact2@mail": {
+                "name": "contact2",
+                "email": "contact2@mail",
+                "phone": "123-123-123"
+            }
+        }
+    },
+    "user1@mail": {
+        "name": "user 1",
+        "email": "user1@mail",
+        "contact": null
+    },
+    "user2@mail": {
+        "name": "user 2",
+        "email": "user2@mail",
+        "contact": null
+    }
+}
