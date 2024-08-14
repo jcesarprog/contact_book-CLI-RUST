@@ -1,7 +1,7 @@
 use std::{
     collections::HashMap,
-    fs::File,
-    io::{Error, Read},
+    fs::{self, File},
+    io::{Error, Read, Write},
 };
 
 use crate::user::User;
@@ -21,8 +21,8 @@ fn load_file(file_name: &str) -> File {
     }
 }
 
-pub fn load_data_from_json() -> Result<HashMap<String, User>, Error> {
-    let mut data = load_file("data.json");
+pub fn load_data_from_json(file_name: &str) -> Result<HashMap<String, User>, Error> {
+    let mut data = load_file(file_name);
     let mut json_data_string = String::new();
     data.read_to_string(&mut json_data_string)?;
 
@@ -35,7 +35,21 @@ pub fn load_data_from_json() -> Result<HashMap<String, User>, Error> {
     Ok(users)
 }
 
-pub fn save_data_to_json() -> Result<(), Error> {
-    // TODO
+pub fn save_data_to_json(users: &HashMap<String, User>, file_name: &str) -> Result<(), Error> {
+    let users_json_string = turn_users_to_string(users)?;
+    fs::write(file_name, users_json_string).expect("error saving saving data to file");
     Ok(())
+}
+
+pub fn turn_users_to_string(users: &HashMap<String, User>) -> Result<String, Error> {
+    // Serialize it to a JSON string.
+    Ok(serde_json::to_string(&users).expect("error turning users data into string!"))
+}
+
+pub fn save_data_to_json_and_reload_data_in_memory(
+    users: &HashMap<String, User>,
+    file_name: &str,
+) -> Result<HashMap<String, User>, Error> {
+    save_data_to_json(&users, file_name)?;
+    load_data_from_json(file_name)
 }

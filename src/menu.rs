@@ -2,7 +2,7 @@ use std::collections::HashMap;
 
 use dialoguer::{theme::ColorfulTheme, Select};
 
-use crate::{app::AppState, contact::Contact, user::User, utils};
+use crate::{app::AppState, contact::Contact, io, user::User, utils};
 
 #[derive(Debug)]
 pub enum MenuOption {
@@ -139,6 +139,7 @@ pub fn menu_register_user(app: &mut AppState, users: &mut HashMap<String, User>)
     app.user_selected = Some(u.email.clone());
     // insert the user on the users vector
     users.insert(u.email.clone(), u);
+    io::save_data_to_json(users, "data.json").expect("error saving data to json");
     MenuOption::UserMainMenu
 }
 
