@@ -22,9 +22,9 @@
 
 - [x] Check how to enable to keep a selected user highlited in the same poisition in the terminal, and then all future commands will work with this user already select, like creating a state for the selected user
 
-- [ ] Create a data layer using traits to easily change the data source from json to SQlite
+- [ ] Create a data layer using traits to easily change the data source from json to SQlite by enforcing the same API through the DAOs
 
-- [ ] make the app serve in a API the data stored
+- [ ] make the app serve an API locally with the data stored
 
 ## Initial Design (It will be translated and modified)
 
