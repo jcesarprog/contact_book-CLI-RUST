@@ -3,7 +3,7 @@ use std::{collections::HashMap, process::Command};
 use colored::Colorize;
 use dialoguer::console::{style, Color};
 
-use crate::{app::AppState, menu::MenuOption, user::User};
+use crate::{app::AppState, menu::MenuOption, repo::models::user::User};
 
 pub fn print_with_theme(message: &str) {
     // Use the theme's style to print the message

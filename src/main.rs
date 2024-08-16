@@ -1,8 +1,7 @@
 mod app;
-mod contact;
 mod io;
 mod menu;
-mod user;
+mod repo;
 mod utils;
 
 use app::AppState;

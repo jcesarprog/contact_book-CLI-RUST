@@ -2,7 +2,12 @@ use std::collections::HashMap;
 
 use dialoguer::{theme::ColorfulTheme, Select};
 
-use crate::{app::AppState, contact::Contact, io, user::User, utils};
+use crate::{
+    app::AppState,
+    io,
+    repo::models::{contact::Contact, user::User},
+    utils,
+};
 
 #[derive(Debug)]
 pub enum MenuOption {

@@ -1,10 +1,10 @@
 use std::{
     collections::HashMap,
     fs::{self, File},
-    io::{Error, Read, Write},
+    io::{Error, Read},
 };
 
-use crate::user::User;
+use crate::repo::models::user::User;
 
 fn load_file(file_name: &str) -> File {
     let file = File::open(file_name);
