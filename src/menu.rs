@@ -4,8 +4,10 @@ use dialoguer::{theme::ColorfulTheme, Select};
 
 use crate::{
     app::AppState,
-    io,
-    repo::models::{contact::Contact, user::User},
+    repo::{
+        dao::DAO,
+        models::{contact::Contact, user::User},
+    },
     utils,
 };
 
@@ -137,14 +139,21 @@ pub fn menu_list_contacts_to_select(
     }
 }
 
-pub fn menu_register_user(app: &mut AppState, users: &mut HashMap<String, User>) -> MenuOption {
+pub fn menu_register_user(
+    app: &mut AppState,
+    users: &mut HashMap<String, User>,
+    adapter_dao: &impl DAO,
+) -> MenuOption {
     // create the user
     let u = User::new();
     // set the user to be selected on state
     app.user_selected = Some(u.email.clone());
     // insert the user on the users vector
     users.insert(u.email.clone(), u);
-    io::save_data_to_json(users, "data.json").expect("error saving data to json");
+    adapter_dao
+        .save_user(users)
+        .expect("error saving data to json");
+
     MenuOption::UserMainMenu
 }
 
