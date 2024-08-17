@@ -3,7 +3,7 @@ use std::{collections::HashMap, process::Command};
 use colored::Colorize;
 use dialoguer::console::{style, Color};
 
-use crate::{app::AppState, menu::MenuOption, repo::models::user::User};
+use crate::{app::AppState, menu::MenuOptionAndAction, repo::models::user::User};
 
 pub fn print_with_theme(message: &str) {
     // Use the theme's style to print the message
@@ -66,7 +66,7 @@ pub fn get_selected_user_mut<'a>(
     selected_user
 }
 
-pub fn not_implelemted_yet(section: &str) -> MenuOption {
+pub fn not_implelemted_yet(section: &str) -> MenuOptionAndAction {
     println!("{:?} - Not implemented yet", section);
-    MenuOption::Quit
+    MenuOptionAndAction::Quit
 }

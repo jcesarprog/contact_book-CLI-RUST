@@ -30,17 +30,24 @@ impl DAO for UserJsonAdapter {
         fs::write(&self.file_path, users_json_string).expect("error saving saving data to file");
         Ok(())
     }
+
+    fn remove_user(
+        &self,
+        key: &str,
+        mut users: HashMap<String, User>,
+    ) -> Result<HashMap<String, User>, Error> {
+        users.remove(key);
+        self.save_user(&users)?;
+        Ok(users)
+    }
+
     /*
     fn get_user(&self, key: &str) -> Result<Option<User>, Error> {
         let users = self.get_users().expect("error loading users from json");
         Ok(users.get(key).cloned())
     }
 
-    fn remove_user(&self, key: &str) -> Result<HashMap<String, User>, Error> {
-        let mut users = self.get_users().expect("error loading users from json");
-        users.remove(key);
-        Ok(users)
-    }
+
 
     fn update_user(&self, key: &str, user: User) -> Result<HashMap<String, User>, Error> {
         let mut users = self.get_users().expect("error loading users from json");

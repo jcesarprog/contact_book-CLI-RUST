@@ -12,7 +12,7 @@ use crate::{
 };
 
 #[derive(Debug)]
-pub enum MenuOption {
+pub enum MenuOptionAndAction {
     MainMenu,          // Menu with select and register user
     ListUsersToSelect, // Menu with the list of users to select
     UserMainMenu,      // Menu with the options for a selected user
@@ -22,9 +22,11 @@ pub enum MenuOption {
     ListContacts, // Menu with the list of contacts
     AddContact,
     EditContact,
+    RemoveUser,
+    RemoveContact,
 }
 
-pub fn menu_select_register_user() -> MenuOption {
+pub fn menu_select_register_user() -> MenuOptionAndAction {
     let selections = &["Select a user", "Register a user", "Quit"];
 
     let selection = Select::with_theme(&ColorfulTheme::default())
@@ -35,13 +37,16 @@ pub fn menu_select_register_user() -> MenuOption {
         .unwrap();
 
     match selection {
-        0 => MenuOption::ListUsersToSelect,
-        1 => MenuOption::RegisterUser,
-        _ => MenuOption::Quit,
+        0 => MenuOptionAndAction::ListUsersToSelect,
+        1 => MenuOptionAndAction::RegisterUser,
+        _ => MenuOptionAndAction::Quit,
     }
 }
 
-pub fn menu_list_users_to_select(app: &mut AppState, users: &HashMap<String, User>) -> MenuOption {
+pub fn menu_list_users_to_select(
+    app: &mut AppState,
+    users: &HashMap<String, User>,
+) -> MenuOptionAndAction {
     utils::clear_terminal_and_show_user(app, users);
     let mut user_names: Vec<&String> = users.keys().collect();
     let back = "<- Back".to_string();
@@ -53,14 +58,14 @@ pub fn menu_list_users_to_select(app: &mut AppState, users: &HashMap<String, Use
         .interact()
         .unwrap();
     if selection == user_names.len() - 1 {
-        return MenuOption::MainMenu;
+        return MenuOptionAndAction::MainMenu;
     }
 
     app.user_selected = Some(user_names[selection].clone());
-    MenuOption::UserMainMenu
+    MenuOptionAndAction::UserMainMenu
 }
 
-pub fn menu_user_menu(app: &AppState, users: &HashMap<String, User>) -> MenuOption {
+pub fn menu_user_menu(app: &AppState, users: &HashMap<String, User>) -> MenuOptionAndAction {
     utils::clear_terminal_and_show_user(app, users);
     // ## Getting contacts size
     let selected_user = utils::get_selected_user(app, users);
@@ -71,7 +76,7 @@ pub fn menu_user_menu(app: &AppState, users: &HashMap<String, User>) -> MenuOpti
     let list_contact_opt = format!("List contacts({})", contacts_size);
     // ##
 
-    let selections = &["Edit user", &list_contact_opt, "Add Contact", "<- Back"];
+    let selections = &["Edit user", &list_contact_opt, "Remove User", "<- Back"];
 
     let selection = Select::with_theme(&ColorfulTheme::default())
         .with_prompt("Choose an option")
@@ -81,17 +86,17 @@ pub fn menu_user_menu(app: &AppState, users: &HashMap<String, User>) -> MenuOpti
         .unwrap();
 
     match selection {
-        0 => MenuOption::EditUser,
-        1 => MenuOption::ListContacts,
-        2 => MenuOption::AddContact,
-        _ => MenuOption::ListUsersToSelect,
+        0 => MenuOptionAndAction::EditUser,
+        1 => MenuOptionAndAction::ListContacts,
+        2 => MenuOptionAndAction::RemoveUser,
+        _ => MenuOptionAndAction::ListUsersToSelect,
     }
 }
 
 pub fn menu_list_contacts_to_select(
     app: &mut AppState,
     users: &HashMap<String, User>,
-) -> MenuOption {
+) -> MenuOptionAndAction {
     utils::clear_terminal_and_show_user(app, users);
     let current_user = utils::get_selected_user(app, users);
     let contacts = current_user.contact.as_ref();
@@ -110,8 +115,10 @@ pub fn menu_list_contacts_to_select(
                     )
                 })
                 .collect::<Vec<_>>();
-            let back = "<- Back".to_string();
-            contact_names.push(back);
+            let add_contact_opt = "Add Contact".to_string();
+            let back_opt = "<- Back".to_string();
+            contact_names.push(add_contact_opt);
+            contact_names.push(back_opt);
 
             let selection = Select::with_theme(&ColorfulTheme::default())
                 .with_prompt("Choose a contact to edit")
@@ -119,22 +126,30 @@ pub fn menu_list_contacts_to_select(
                 .items(&contact_names[..])
                 .interact()
                 .unwrap();
-            if selection == contact_names.len() - 1 {
-                return MenuOption::UserMainMenu;
+
+            match selection {
+                len if len == contact_names.len() - 2 => MenuOptionAndAction::AddContact,
+                len if len == contact_names.len() - 1 => MenuOptionAndAction::UserMainMenu,
+                _ => {
+                    let contact_selected =
+                        contact_names[selection].split_whitespace().next().unwrap();
+                    app.contact_selected = Some(contact_selected.to_string());
+                    MenuOptionAndAction::EditContact
+                }
             }
-            let contact_selected = contact_names[selection].split_whitespace().next().unwrap();
-            app.contact_selected = Some(contact_selected.to_string());
-            MenuOption::EditContact
         }
         None => {
-            Select::with_theme(&ColorfulTheme::default())
+            let selection = Select::with_theme(&ColorfulTheme::default())
                 .with_prompt("Choose a contact to edit")
                 .default(0)
-                .items(&["<- Back"])
+                .items(&["Add Contact", "<- Back"])
                 .interact()
                 .unwrap();
-
-            MenuOption::UserMainMenu
+            match selection {
+                0 => MenuOptionAndAction::AddContact,
+                1 => MenuOptionAndAction::UserMainMenu,
+                _ => unreachable!(),
+            }
         }
     }
 }
@@ -143,7 +158,7 @@ pub fn menu_register_user(
     app: &mut AppState,
     users: &mut HashMap<String, User>,
     adapter_dao: &impl DAO,
-) -> MenuOption {
+) -> MenuOptionAndAction {
     // create the user
     let u = User::new();
     // set the user to be selected on state
@@ -154,10 +169,13 @@ pub fn menu_register_user(
         .save_user(users)
         .expect("error saving data to json");
 
-    MenuOption::UserMainMenu
+    MenuOptionAndAction::UserMainMenu
 }
 
-pub fn menu_edit_user(app: &mut AppState, users: &mut HashMap<String, User>) -> MenuOption {
+pub fn menu_edit_user(
+    app: &mut AppState,
+    users: &mut HashMap<String, User>,
+) -> MenuOptionAndAction {
     // This option will clone the user contacts
     // delete the original key and create a new one with the same old contacs
     // 1. Creating a new user
@@ -174,10 +192,13 @@ pub fn menu_edit_user(app: &mut AppState, users: &mut HashMap<String, User>) -> 
     // 5. insert the new user to the map
     users.insert(u.email.clone(), u);
 
-    MenuOption::UserMainMenu
+    MenuOptionAndAction::UserMainMenu
 }
 
-pub fn menu_add_contact(app: &mut AppState, users: &mut HashMap<String, User>) -> MenuOption {
+pub fn menu_add_contact(
+    app: &mut AppState,
+    users: &mut HashMap<String, User>,
+) -> MenuOptionAndAction {
     let selected_user = utils::get_selected_user_mut(app, users);
     let new_contact = Contact::new();
     match &mut selected_user.contact {
@@ -188,10 +209,13 @@ pub fn menu_add_contact(app: &mut AppState, users: &mut HashMap<String, User>) -
             contacts.insert(new_contact.email.clone(), new_contact);
         }
     }
-    MenuOption::ListContacts
+    MenuOptionAndAction::ListContacts
 }
 
-pub fn menu_edit_contact(app: &mut AppState, users: &mut HashMap<String, User>) -> MenuOption {
+pub fn menu_edit_contact(
+    app: &mut AppState,
+    users: &mut HashMap<String, User>,
+) -> MenuOptionAndAction {
     // 1. get the selected user
     let selected_user = utils::get_selected_user_mut(app, users);
     // 2. remove the selected contact
@@ -208,5 +232,17 @@ pub fn menu_edit_contact(app: &mut AppState, users: &mut HashMap<String, User>) 
         .as_mut()
         .unwrap()
         .insert(new_contact.name.clone(), new_contact);
-    MenuOption::ListContacts
+    MenuOptionAndAction::ListContacts
+}
+
+pub fn menu_remove_user(
+    app: &mut AppState,
+    users: HashMap<String, User>,
+    adapter_dao: &impl DAO,
+) -> HashMap<String, User> {
+    let new_users = adapter_dao
+        .remove_user(app.user_selected.as_ref().unwrap(), users)
+        .expect("error removing the user");
+    app.user_selected = None;
+    new_users
 }
