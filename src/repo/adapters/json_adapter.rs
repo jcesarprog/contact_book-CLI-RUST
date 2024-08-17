@@ -1,5 +1,6 @@
 use crate::repo::dao::DAO;
 use crate::repo::models::user::User;
+
 use std::collections::HashMap;
 use std::fs::{self, File};
 use std::io::{Error, Read};
@@ -24,15 +25,15 @@ impl DAO for UserJsonAdapter {
         Ok(users)
     }
 
-    fn get_user(&self, key: &str) -> Result<Option<User>, Error> {
-        let users = self.get_users().expect("error loading users from json");
-        Ok(users.get(key).cloned())
-    }
-
     fn save_user(&self, users: &HashMap<String, User>) -> Result<(), Error> {
         let users_json_string = turn_users_to_json_string(users)?;
         fs::write(&self.file_path, users_json_string).expect("error saving saving data to file");
         Ok(())
+    }
+    /*
+    fn get_user(&self, key: &str) -> Result<Option<User>, Error> {
+        let users = self.get_users().expect("error loading users from json");
+        Ok(users.get(key).cloned())
     }
 
     fn remove_user(&self, key: &str) -> Result<HashMap<String, User>, Error> {
@@ -46,6 +47,7 @@ impl DAO for UserJsonAdapter {
         users.insert(key.to_string(), user);
         Ok(users)
     }
+    */
 }
 
 fn load_file(file_name: &str) -> File {
