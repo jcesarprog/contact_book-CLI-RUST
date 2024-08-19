@@ -27,7 +27,7 @@ pub enum MenuOptionAndAction {
 }
 
 pub fn menu_select_register_user() -> MenuOptionAndAction {
-    let selections = &["Select a user", "Register a user", "Quit"];
+    let selections = &["Select a user", "Quit"];
 
     let selection = Select::with_theme(&ColorfulTheme::default())
         .with_prompt("Choose an option")
@@ -38,7 +38,6 @@ pub fn menu_select_register_user() -> MenuOptionAndAction {
 
     match selection {
         0 => MenuOptionAndAction::ListUsersToSelect,
-        1 => MenuOptionAndAction::RegisterUser,
         _ => MenuOptionAndAction::Quit,
     }
 }
@@ -49,7 +48,9 @@ pub fn menu_list_users_to_select(
 ) -> MenuOptionAndAction {
     utils::clear_terminal_and_show_user(app, users);
     let mut user_names: Vec<&String> = users.keys().collect();
+    let register_user = "Register a user".to_string();
     let back = "<- Back".to_string();
+    user_names.push(&register_user);
     user_names.push(&back);
     let selection = Select::with_theme(&ColorfulTheme::default())
         .with_prompt("Choose an user")
@@ -57,12 +58,15 @@ pub fn menu_list_users_to_select(
         .items(&user_names[..])
         .interact()
         .unwrap();
-    if selection == user_names.len() - 1 {
-        return MenuOptionAndAction::MainMenu;
-    }
 
-    app.user_selected = Some(user_names[selection].clone());
-    MenuOptionAndAction::UserMainMenu
+    match selection {
+        sel if sel == user_names.len() - 2 => MenuOptionAndAction::RegisterUser,
+        sel if sel == user_names.len() - 1 => MenuOptionAndAction::MainMenu,
+        _ => {
+            app.user_selected = Some(user_names[selection].clone());
+            MenuOptionAndAction::UserMainMenu
+        }
+    }
 }
 
 pub fn menu_user_menu(app: &AppState, users: &HashMap<String, User>) -> MenuOptionAndAction {
