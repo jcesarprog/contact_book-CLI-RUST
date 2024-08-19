@@ -4,7 +4,7 @@ mod repo;
 mod utils;
 
 use app::AppState;
-use menu::MenuOptionAndAction;
+use menu::{menu_contact_options, MenuOptionAndAction};
 use repo::{adapters::json_adapter::UserJsonAdapter, dao::DAO};
 
 fn main() {
@@ -44,6 +44,7 @@ fn main() {
                 println!("Good bye!",);
                 std::process::exit(0)
             }
+            MenuOptionAndAction::ContactOptions => menu_contact_options(&app, &users),
             other => utils::not_implelemted_yet(&format!("{:?}", other)),
         };
     }

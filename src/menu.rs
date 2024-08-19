@@ -23,6 +23,7 @@ pub enum MenuOptionAndAction {
     AddContact,
     EditContact,
     RemoveUser,
+    ContactOptions,
     RemoveContact,
 }
 
@@ -138,7 +139,7 @@ pub fn menu_list_contacts_to_select(
                     let contact_selected =
                         contact_names[selection].split_whitespace().next().unwrap();
                     app.contact_selected = Some(contact_selected.to_string());
-                    MenuOptionAndAction::EditContact
+                    MenuOptionAndAction::ContactOptions
                 }
             }
         }
@@ -249,4 +250,24 @@ pub fn menu_remove_user(
         .expect("error removing the user");
     app.user_selected = None;
     new_users
+}
+
+pub fn menu_contact_options(app: &AppState, users: &HashMap<String, User>) -> MenuOptionAndAction {
+    utils::clear_terminal_and_show_user(app, users);
+    let options = ["Edit", "Remove", "Back"];
+    let prompt = format!(
+        "Choose an action over contact: {:?} ",
+        &app.contact_selected.as_ref().unwrap()
+    );
+    match Select::with_theme(&ColorfulTheme::default())
+        .with_prompt(&prompt)
+        .default(0)
+        .items(&options)
+        .interact()
+        .unwrap()
+    {
+        0 => MenuOptionAndAction::EditContact,
+        1 => MenuOptionAndAction::RemoveContact,
+        _ => MenuOptionAndAction::ListContacts,
+    }
 }
