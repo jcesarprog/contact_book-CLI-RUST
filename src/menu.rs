@@ -62,7 +62,10 @@ pub fn menu_list_users_to_select(
 
     match selection {
         sel if sel == user_names.len() - 2 => MenuOptionAndAction::RegisterUser,
-        sel if sel == user_names.len() - 1 => MenuOptionAndAction::MainMenu,
+        sel if sel == user_names.len() - 1 => {
+            app.user_selected = None;
+            MenuOptionAndAction::MainMenu
+        }
         _ => {
             app.user_selected = Some(user_names[selection].clone());
             MenuOptionAndAction::UserMainMenu
@@ -70,7 +73,7 @@ pub fn menu_list_users_to_select(
     }
 }
 
-pub fn menu_user_menu(app: &AppState, users: &HashMap<String, User>) -> MenuOptionAndAction {
+pub fn menu_user_menu(app: &mut AppState, users: &HashMap<String, User>) -> MenuOptionAndAction {
     utils::clear_terminal_and_show_user(app, users);
     // ## Getting contacts size
     let selected_user = utils::get_selected_user(app, users);
@@ -94,7 +97,10 @@ pub fn menu_user_menu(app: &AppState, users: &HashMap<String, User>) -> MenuOpti
         0 => MenuOptionAndAction::EditUser,
         1 => MenuOptionAndAction::ListContacts,
         2 => MenuOptionAndAction::RemoveUser,
-        _ => MenuOptionAndAction::ListUsersToSelect,
+        _ => {
+            app.user_selected = None;
+            MenuOptionAndAction::ListUsersToSelect
+        }
     }
 }
 

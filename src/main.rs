@@ -28,7 +28,7 @@ fn main() {
                 menu::menu_list_users_to_select(&mut app, &users)
             }
 
-            MenuOptionAndAction::UserMainMenu => menu::menu_user_menu(&app, &users),
+            MenuOptionAndAction::UserMainMenu => menu::menu_user_menu(&mut app, &users),
             MenuOptionAndAction::EditUser => menu::menu_edit_user(&mut app, &mut users),
             MenuOptionAndAction::AddContact => menu::menu_add_contact(&mut app, &mut users),
             MenuOptionAndAction::ListContacts => {

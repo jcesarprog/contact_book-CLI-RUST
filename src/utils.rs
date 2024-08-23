@@ -67,14 +67,14 @@ pub fn show_user(app: &AppState, users: &HashMap<String, User>) {
     let total_width = space_for_display_content + hashes_on_each_side * 2 + spaces_on_each_side * 2;
 
     // Top border hashes
-    println!("\n{:#^1$}", "", total_width);
+    println!("\n{:#^1$}", " User ", total_width);
 
     // Content
     println!(
         "{hashes}{spaces}{content}{spaces}{hashes}",
         hashes = "#".repeat(hashes_on_each_side),
         spaces = " ".repeat(spaces_on_each_side),
-        content = display_content
+        content = display_content,
     );
 
     // bottom border hashes
