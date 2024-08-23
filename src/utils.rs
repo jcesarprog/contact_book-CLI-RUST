@@ -13,24 +13,72 @@ pub fn print_with_theme(message: &str) {
     println!("{}", styled_message);
 }
 
+fn strip_ansi_codes(s: &str) -> String {
+    // There are some color codes like:
+    // \u{1b}[92m
+    // skipping from the unicode start until first letter is enconuter
+    let mut result = String::new();
+    let mut in_escape = false;
+
+    for c in s.chars() {
+        if c == '\u{1b}' {
+            // Found start of escape sequence..
+            // turning on in_scape flag
+            in_escape = true;
+            continue;
+        }
+        if in_escape {
+            // Everything under here should be skipped
+            if c.is_alphabetic() {
+                // should be the last letter from escape sequence
+                // turn off in_escape flag before continuing
+                in_escape = false;
+            }
+            continue;
+        }
+
+        result.push(c);
+    }
+
+    result
+}
+
 pub fn show_user(app: &AppState, users: &HashMap<String, User>) {
     let user_selected = match &app.user_selected {
         Some(user_email) => (user_email.as_str(), users[user_email].name.as_str()),
         None => ("No user selected", ""),
     };
     clear_terminal();
-    println!("\n###########################################");
-    if !user_selected.1.is_empty() {
-        println!(
-            "### Selected: {} ({})",
+
+    let display_content = match !user_selected.1.is_empty() {
+        true => format!(
+            "{} ({})",
             user_selected.0.bright_cyan(),
             user_selected.1.bright_green()
-        );
-    } else {
-        println!("### Selected: {}", user_selected.0.bright_cyan(),);
-    }
+        ),
+        false => format!("{}", user_selected.0.bright_cyan()),
+    };
 
-    println!("###########################################\n");
+    // Minimum space needed for the content
+    let space_for_display_content = strip_ansi_codes(&display_content).chars().count();
+    // total width including padding and spaces
+    let spaces_on_each_side = 2;
+    let hashes_on_each_side = 2;
+    let total_width = space_for_display_content + hashes_on_each_side * 2 + spaces_on_each_side * 2;
+
+    // Top border hashes
+    println!("\n{:#^1$}", "", total_width);
+
+    // Content
+    println!(
+        "{hashes}{spaces}{content}{spaces}{hashes}",
+        hashes = "#".repeat(hashes_on_each_side),
+        spaces = " ".repeat(spaces_on_each_side),
+        content = display_content
+    );
+
+    // bottom border hashes
+    println!("{:#^1$}\n", "", total_width);
 }
 
 pub fn clear_terminal() {
