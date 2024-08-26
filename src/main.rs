@@ -4,7 +4,7 @@ mod repo;
 mod utils;
 
 use app::AppState;
-use menu::{menu_contact_options, MenuOptionAndAction};
+use menu::MenuOptionAndAction::*;
 use repo::{adapters::json_adapter::UserJsonAdapter, dao::DAO};
 
 fn main() {
@@ -17,34 +17,29 @@ fn main() {
 
     loop {
         app.menu_state = match app.menu_state {
-            MenuOptionAndAction::MainMenu => {
+            MainMenu => {
                 utils::clear_terminal_and_show_user(&app, &users);
                 menu::menu_select_register_user()
             }
-            MenuOptionAndAction::RegisterUser => {
-                menu::menu_register_user(&mut app, &mut users, &adapter_dao)
-            }
-            MenuOptionAndAction::ListUsersToSelect => {
-                menu::menu_list_users_to_select(&mut app, &users)
-            }
+            RegisterUser => menu::menu_register_user(&mut app, &mut users, &adapter_dao),
+            ListUsersToSelect => menu::menu_list_users_to_select(&mut app, &users),
 
-            MenuOptionAndAction::UserMainMenu => menu::menu_user_menu(&mut app, &users),
-            MenuOptionAndAction::EditUser => menu::menu_edit_user(&mut app, &mut users),
-            MenuOptionAndAction::AddContact => menu::menu_add_contact(&mut app, &mut users),
-            MenuOptionAndAction::ListContacts => {
-                menu::menu_list_contacts_to_select(&mut app, &users)
-            }
-            MenuOptionAndAction::EditContact => menu::menu_edit_contact(&mut app, &mut users),
-            MenuOptionAndAction::RemoveUser => {
+            UserMainMenu => menu::menu_user_menu(&mut app, &users),
+            EditUser => menu::menu_edit_user(&mut app, &mut users),
+            AddContact => menu::menu_add_contact(&mut app, &mut users),
+            ListContacts => menu::menu_list_contacts_to_select(&mut app, &users),
+
+            EditContact => menu::menu_edit_contact(&mut app, &mut users),
+            RemoveUser => {
                 println!("Removing user...");
                 users = menu::menu_remove_user(&mut app, users, &adapter_dao);
-                MenuOptionAndAction::MainMenu
+                MainMenu
             }
-            MenuOptionAndAction::Quit => {
+            Quit => {
                 println!("Good bye!",);
                 std::process::exit(0)
             }
-            MenuOptionAndAction::ContactOptions => menu_contact_options(&app, &users),
+            ContactOptions => menu::menu_contact_options(&app, &users),
             other => utils::not_implelemted_yet(&format!("{:?}", other)),
         };
     }
